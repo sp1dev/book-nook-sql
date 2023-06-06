@@ -11,6 +11,7 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS Library
                   (Title TEXT NOT NULL,
                   Description TEXT NULL)''')
 
+
 # print_inventory_count(): Displays how many total books there are in a readable format.
 def print_inventory_count():
     cursor.execute("SELECT COUNT(Title) FROM Library")
@@ -43,6 +44,21 @@ def display_inventory():
         print("Desc:", row[1])
         print()
 
+
+#checked out functiion
+ 
+def checked_out(item):
+    cursor.execute("UPDATE library SET Checked_out = 1 WHERE Title = '"+ item +"'")
+    conn.commit()
+
+# adding a column - boolean
+#return book function
+#genre function
+# adding anotha column - varchar(50)
+
+#edit function
+#update title
+
 # Welcome message
 print("      ______ ______")
 print("    _/      Y      \\_")
@@ -52,7 +68,7 @@ print(" //________.|.________\\\\ ")
 print("`----------`-'----------'")
 print("\nWelcome to Book Nook!\n")
 while True:
-    print("Menu: \n Add book (add)\n Remove book (remove) \n Show inventory (show) \n Show inventory count (count) \n Quit (q)\n")
+    print("Menu: \n Add book (add)\n Remove book (remove) \n Show inventory (show) \n Show inventory count (count) \n Check out (check) \n Quit (q)\n")
     user_selection = input("What would you like to do? ").lower().strip()
 
     if user_selection == "add":
@@ -66,6 +82,10 @@ while True:
     elif user_selection == "show":
         print_inventory_count()        
         display_inventory()
+    elif user_selection == "check":
+        display_inventory() 
+        book = input("\n Enter the book title that you'd like to check out? ").strip()
+        checked_out(book)       
     elif user_selection == "q":
         print("Bye bye!")
         break
@@ -74,6 +94,6 @@ while True:
 
     print("\n")
 
-# Close the cursor and connection
+# Close the cursor and connection 
 cursor.close()
 conn.close()
