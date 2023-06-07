@@ -48,8 +48,14 @@ def display_inventory():
 #checked out functiion
  
 def checked_out(item):
-    cursor.execute("UPDATE library SET Checked_out = 1 WHERE Title = '"+ item +"'")
-    conn.commit()
+    cursor.execute("SELECT Checked_out FROM library Where Title = '"+ item +"' ")
+    row = cursor.fetchone()
+    if(row[0] == 1):
+        print(" \n already checked out")
+    else:
+        cursor.execute("UPDATE library SET Checked_out = 1 WHERE Title = '"+ item +"'")
+        conn.commit()
+        print("You have checked out " + item)
 
 # adding a column - boolean
 #return book function
