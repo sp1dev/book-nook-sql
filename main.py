@@ -17,7 +17,7 @@ def print_inventory_count():
     cursor.execute("SELECT COUNT(Title) FROM Library")
     # fetch returns the query result and because COUNT returns one row (the count), we use fetchone
     count = cursor.fetchone()[0]
-    print("There are " + str(count) + " books in your inventory.")
+    print("\nThere are " + str(count) + " books in your inventory.")
 
 #add_book(item): Adds a book to the inventory.
 def add_book(item):
@@ -40,14 +40,18 @@ def display_inventory():
 
     # Print the results
     for row in rows:
-        print("Title:", row[0])
+        print("\nTitle:", row[0])
         print("Desc:", row[1])
-        print()
+        if(row[2] == 0):
+            print("Checked out:", "False \n")
+        else:
+            print("Checked out:", "True \n")
 
 
 #checked out functiion
  
 def checked_out(item):
+
     cursor.execute("SELECT Checked_out FROM library Where Title = '"+ item +"' ")
     row = cursor.fetchone()
     if(row[0] == 1):
@@ -57,8 +61,18 @@ def checked_out(item):
         conn.commit()
         print("You have checked out " + item)
 
-# adding a column - boolean
+
 #return book function
+
+def return_book(item):
+    cursor.execute("SELECT Checked_out FROM library Where Title = '"+ item +"' ")
+    row = cursor.fetchone()
+    if(row[0] == 0):
+        print("\n already returned")
+    else:
+        cursor.execute("UPDATE library SET Checked_out = 0 WHERE Title = '"+ item +"'")
+        conn.commit()
+        print("\nYou have returned " + item)
 #genre function
 # adding anotha column - varchar(50)
 
@@ -74,7 +88,7 @@ print(" //________.|.________\\\\ ")
 print("`----------`-'----------'")
 print("\nWelcome to Book Nook!\n")
 while True:
-    print("Menu: \n Add book (add)\n Remove book (remove) \n Show inventory (show) \n Show inventory count (count) \n Check out (check) \n Quit (q)\n")
+    print("Menu: \n Add book (add)\n Remove book (remove) \n Show inventory (show) \n Show inventory count (count) \n Check out (check) \n Return book (return) \n Quit (q)\n")
     user_selection = input("What would you like to do? ").lower().strip()
 
     if user_selection == "add":
@@ -91,7 +105,11 @@ while True:
     elif user_selection == "check":
         display_inventory() 
         book = input("\n Enter the book title that you'd like to check out? ").strip()
-        checked_out(book)       
+        checked_out(book)  
+    elif user_selection == "return":
+        display_inventory() 
+        book = input("\n Enter the book title that you'd like to check out? ").strip()
+        return_book(book)       
     elif user_selection == "q":
         print("Bye bye!")
         break
